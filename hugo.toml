@@ -3,8 +3,10 @@ title = "My Engineering Blog"
 languageCode = "ko"
 theme = "PaperMod"
 paginate = 5
-publishDir = "docs"
 enableRobotsTXT = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 [params]
   defaultTheme = "auto"
@@ -18,7 +20,7 @@ enableRobotsTXT = true
   mainSections = ["posts"]
 
 [params.homeInfoParams]
-  Title = "Kangyeul's Engineering Blog 🛠️"
+  Title = "Kangyeul's Engineering Blog"
   Content = "기술 학습 노트와 프로젝트 회고를 공유합니다."
 
 [[params.socialIcons]]
