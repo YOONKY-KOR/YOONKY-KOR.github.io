@@ -1,14 +1,65 @@
-baseURL = "https://kyyoon.github.io/"
-languageCode = "ko"
+baseURL = "https://YOONKY-KOR.github.io/"
 title = "My Engineering Blog"
+languageCode = "ko"
 theme = "PaperMod"
+paginate = 5
 publishDir = "docs"
+enableRobotsTXT = true
 
 [params]
   defaultTheme = "auto"
+  env = "production"
   ShowReadingTime = true
   ShowShareButtons = false
   ShowCodeCopyButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  disableSpecial1stPost = false
+  mainSections = ["posts"]
+
+[params.homeInfoParams]
+  Title = "Kangyeul's Engineering Blog 🛠️"
+  Content = "기술 학습 노트와 프로젝트 회고를 공유합니다."
+
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/YOONKY-KOR"
+
+[params.fuseOpts]
+  isCaseSensitive = false
+  shouldSort = true
+  threshold = 0.4
+  keys = ["title", "permalink", "summary", "content"]
+
+[[menu.main]]
+  identifier = "about"
+  name = "About"
+  url = "/about/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "categories"
+  name = "Categories"
+  url = "/categories/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "tags"
+  name = "Tags"
+  url = "/tags/"
+  weight = 30
+
+[[menu.main]]
+  identifier = "search"
+  name = "Search"
+  url = "/search/"
+  weight = 40
+
+[[menu.main]]
+  identifier = "archives"
+  name = "Archives"
+  url = "/archives/"
+  weight = 50
 
 [taxonomies]
   category = "categories"
