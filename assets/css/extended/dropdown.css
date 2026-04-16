@@ -16,6 +16,7 @@
     align-items: center;
     gap: 4px;
     cursor: default;
+    -webkit-user-select: none;
     user-select: none;
 }
 
