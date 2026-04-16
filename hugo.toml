@@ -1,4 +1,4 @@
-baseURL = "https://YOONKY-KOR.github.io/"
+baseURL = "https://yoonky-kor.github.io/"
 title = "My Engineering Blog"
 languageCode = "ko"
 theme = "PaperMod"

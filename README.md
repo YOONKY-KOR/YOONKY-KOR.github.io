@@ -1,4 +1,4 @@
-# kyyoon.github.io
+# yoonky-kor.github.io
 
 Hugo + PaperMod 테마 기반 기술 블로그
 
