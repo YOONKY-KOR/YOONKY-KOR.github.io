@@ -64,20 +64,9 @@
                     {{- $separator := or $label_text (not site.Params.disableThemeToggle)}}
                     {{- if $separator }}<span>|</span>{{ end }}
                     <ul class="lang-menu">
-                        {{- range . -}}
-                        {{- if ne $lang .Lang }}
-                        <li>
-                            <a href="{{- .Permalink -}}" title="{{ .Language.Params.languageAltTitle | default (.Language.LanguageName | emojify) | default (.Lang | title) }}"
-                                aria-label="{{ .Language.LanguageName | default (.Lang | title) }}">
-                                {{- if (and site.Params.displayFullLangName (.Language.LanguageName)) }}
-                                {{- .Language.LanguageName | emojify -}}
-                                {{- else }}
-                                {{- .Lang | title -}}
-                                {{- end -}}
-                            </a>
-                        </li>
-                        {{- end -}}
-                        {{- end}}
+                        {{- range . -}}{{- if ne $lang .Lang -}}
+                        <li><a href="{{- .Permalink -}}" title="{{ .Language.Params.languageAltTitle | default (.Language.LanguageName | emojify) | default (.Lang | title) }}" aria-label="{{ .Language.LanguageName | default (.Lang | title) }}">{{- if (and site.Params.displayFullLangName (.Language.LanguageName)) }}{{- .Language.LanguageName | emojify -}}{{- else }}{{- .Lang | title -}}{{- end -}}</a></li>
+                        {{- end -}}{{- end }}
                     </ul>
                     {{- end }}
                 {{- end }}
@@ -100,13 +89,9 @@
                     </svg>
                 </a>
                 <ul class="dropdown-menu">
-                    {{- range .Children }}
-                    <li>
-                        <a href="{{ .URL | absLangURL }}" title="{{ .Name }}">
-                            {{- .Pre }}{{- .Name -}}{{ .Post -}}
-                        </a>
-                    </li>
-                    {{- end }}
+                    {{- range .Children -}}
+                    <li><a href="{{ .URL | absLangURL }}" title="{{ .Name }}">{{- .Pre }}{{- .Name -}}{{ .Post -}}</a></li>
+                    {{- end -}}
                 </ul>
             </li>
             {{- else }}
