@@ -1,5 +1,5 @@
 baseURL = "https://yoonky-kor.github.io/"
-title = "KY's Devlog"
+title = "KY"
 languageCode = "ko"
 theme = "PaperMod"
 
@@ -18,6 +18,13 @@ enableRobotsTXT = true
   author = "KY"
   defaultTheme = "auto"
   
+  # --- [1. 파비콘 설정 추가] ◀◀ 이 섹션 전체 추가 ---
+  [params.assets]
+    favicon = "/favicon.ico"
+    favicon16x16 = "/favicon-16x16.png"
+    favicon32x32 = "/favicon-32x32.png"
+    apple_touch_icon = "/apple-touch-icon.png"
+
   # UI/UX
   ShowReadingTime = true
   ShowShareButtons = true      # 공유 버튼 활성화 추천
