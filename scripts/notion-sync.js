@@ -47,8 +47,6 @@ async function syncPosts() {
     const summary = props.Summary?.rich_text?.[0]?.plain_text || "";
     const series = props.Series?.rich_text?.[0]?.plain_text || "";
     const seriesOrder = props["Series Order"]?.number ?? null;
-    const coverUrl = props["Cover URL"]?.url || "";
-
     const section = getSectionDir(category);
     const outputDir = path.join(CONTENT_ROOT, section);
 
@@ -74,11 +72,6 @@ async function syncPosts() {
     }
     if (summary) {
       lines.push(`description: "${escapeQuotes(summary)}"`);
-    }
-    if (coverUrl) {
-      lines.push(`cover:`);
-      lines.push(`  image: "${coverUrl}"`);
-      lines.push(`  alt: "${escapeQuotes(title)}"`);
     }
     if (series) {
       lines.push(`series: ["${escapeQuotes(series)}"]`);
