@@ -1,32 +1,45 @@
 baseURL = "https://yoonky-kor.github.io/"
-title = "KY"
+title = "KY's Devlog"
 languageCode = "ko"
 theme = "PaperMod"
+
 [pagination]
   pagerSize = 5
+
 enableRobotsTXT = true
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
 [params]
-  defaultTheme = "auto"
   env = "production"
+  title = "KY"
+  description = "Cloud & AI Engineering Blog"
+  author = "KY"
+  defaultTheme = "auto"
+  
+  # UI/UX
   ShowReadingTime = true
-  ShowShareButtons = false
+  ShowShareButtons = true      # 공유 버튼 활성화 추천
   ShowCodeCopyButtons = true
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
+  ShowToc = true
+  ShowWordCount = true
   disableSpecial1stPost = false
   mainSections = ["posts", "azure", "architecture", "ai"]
 
 [params.homeInfoParams]
   Title = "KY's Engineering Blog"
-  Content = "기술 학습 노트와 프로젝트 회고를 공유합니다."
+  Content = "클라우드 아키텍처와 AI 기술 학습 노트를 공유합니다."
 
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/YOONKY-KOR"
+
+[[params.socialIcons]]
+  name = "email"
+  url = "mailto:yoonky1757@gmail.com"
 
 [params.fuseOpts]
   isCaseSensitive = false
@@ -34,6 +47,7 @@ enableRobotsTXT = true
   threshold = 0.4
   keys = ["title", "permalink", "summary", "content"]
 
+# 메뉴 설정 (기존과 동일)
 [[menu.main]]
   identifier = "about"
   name = "About"
