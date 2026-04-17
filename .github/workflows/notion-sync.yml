@@ -42,3 +42,11 @@ jobs:
           git add content/
           git diff --cached --quiet || git commit -m "chore: sync posts from Notion [skip ci]"
           git push
+
+      - name: Update GitHub Commit field in Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          COMMIT=$(git rev-parse HEAD)
+          node update-commits.js $COMMIT
+        working-directory: scripts

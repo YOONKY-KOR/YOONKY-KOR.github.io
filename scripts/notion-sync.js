@@ -34,6 +34,7 @@ async function syncPosts() {
   });
 
   const syncedFiles = new Set();
+  const syncedPageIds = [];
 
   for (const page of response.results) {
     const props = page.properties;
@@ -96,7 +97,12 @@ async function syncPosts() {
     fs.writeFileSync(filepath, content, "utf-8");
     console.log(`Synced: ${section}/${filename}`);
     syncedFiles.add(`${section}/${filename}`);
+    syncedPageIds.push(page.id);
   }
+
+  // commit 후 GitHub Commit 필드 업데이트를 위해 page ID 목록 저장
+  const syncedPath = path.join(__dirname, "synced-pages.json");
+  fs.writeFileSync(syncedPath, JSON.stringify(syncedPageIds, null, 2));
 
   console.log(`Sync complete. ${syncedFiles.size} post(s) written.`);
   syncedFiles.forEach((f) => console.log(`  ✓ ${f}`));
