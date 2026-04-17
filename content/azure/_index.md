@@ -1,4 +1,4 @@
 ---
-title: "Azure Tech Notes"
+title: "Azure"
 description: "Azure 실무 기술 노트 — Azure, MS Fabric, NVIDIA RAG 등"
 ---

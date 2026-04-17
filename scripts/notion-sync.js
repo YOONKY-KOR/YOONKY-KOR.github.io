@@ -13,7 +13,7 @@ const CONTENT_ROOT = path.join(__dirname, "../content");
 const CATEGORY_MAP = {
   "Architecture": "architecture",
   "Azure": "azure",
-  "Claude": "claude",
+  "Claude": "ai",
   "Dev Notes": "posts",
   "Japan Life": "posts",
 };
