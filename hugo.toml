@@ -305,7 +305,7 @@ enableRobotsTXT = true
   repo           = "YOONKY-KOR/yoonky-kor.github.io"
 
   # repoId: giscus.app 에서 확인한 Repository ID (R_ 로 시작)
-  repoId         = "YOUR_REPO_ID"
+  repoId         = "R_kgDOSCJouw"
 
   # category: Discussions 카테고리 이름 (보통 "General" 또는 "Announcements")
   category       = "General"

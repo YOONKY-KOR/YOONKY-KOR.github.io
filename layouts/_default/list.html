@@ -54,7 +54,9 @@
 {{- end }}
 
 {{- $term := .Data.Term }}
+{{- $homeLimit := 3 }}
 {{- range $index, $page := $paginator.Pages }}
+{{- if and $.IsHome (ge $index $homeLimit) }}{{- continue }}{{- end }}
 
 {{- $class := "post-entry" }}
 
