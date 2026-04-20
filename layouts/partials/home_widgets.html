@@ -1,0 +1,67 @@
+<div class="home-widgets">
+
+  <!-- ① 방문자 배지 -->
+  <div class="widget-visitors">
+    <a href="https://hits.seeyoufarm.com" target="_blank" rel="noopener">
+      <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fyoonky-kor.github.io&count_bg=%230078D4&title_bg=%23555555&title=Visitors&edge_flat=true"
+           alt="visitor badge" />
+    </a>
+  </div>
+
+  <!-- ② GitHub Stats 카드 -->
+  <div class="widget-github-stats">
+    <a href="https://github.com/YOONKY-KOR" target="_blank" rel="noopener">
+      <picture>
+        <source media="(prefers-color-scheme: dark)"
+          srcset="https://github-readme-stats.vercel.app/api?username=YOONKY-KOR&show_icons=true&theme=dark&hide_border=true&bg_color=1d1e20&title_color=58a6ff&icon_color=58a6ff&text_color=c9d1d9&rank_icon=github" />
+        <img
+          src="https://github-readme-stats.vercel.app/api?username=YOONKY-KOR&show_icons=true&theme=default&hide_border=true&bg_color=ffffff&title_color=0078D4&icon_color=0078D4&rank_icon=github"
+          alt="GitHub Stats"
+          loading="lazy" />
+      </picture>
+    </a>
+  </div>
+
+  <!-- ③ 기술 스택 배지 -->
+  <div class="widget-badges">
+    <img src="https://img.shields.io/badge/Azure-0078D4?style=flat-square&logo=microsoftazure&logoColor=white" alt="Azure" />
+    <img src="https://img.shields.io/badge/Claude_AI-D97706?style=flat-square&logo=anthropic&logoColor=white" alt="Claude AI" />
+    <img src="https://img.shields.io/badge/Hugo-FF4088?style=flat-square&logo=hugo&logoColor=white" alt="Hugo" />
+    <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions" />
+    <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" alt="Notion" />
+    <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+  </div>
+
+</div>
+
+<style>
+  .home-widgets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .widget-visitors {
+    display: flex;
+    justify-content: center;
+  }
+
+  .widget-github-stats img {
+    max-width: 100%;
+    width: 420px;
+    border-radius: 8px;
+  }
+
+  .widget-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .widget-badges img {
+    height: 20px;
+  }
+</style>
