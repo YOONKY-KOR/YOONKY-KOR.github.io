@@ -12,10 +12,49 @@
     data-reactions-enabled="{{ site.Params.giscus.reactionsEnabled | default "1" }}"
     data-emit-metadata="{{ site.Params.giscus.emitMetadata | default "0" }}"
     data-input-position="{{ site.Params.giscus.inputPosition | default "bottom" }}"
-    data-theme="{{ site.Params.giscus.theme | default "preferred_color_scheme" }}"
+    data-theme="light"
     data-lang="{{ site.Params.giscus.lang | default "ko" }}"
     crossorigin="anonymous"
     async>
   </script>
 </div>
+
+<script>
+  // PaperMod 테마 토글에 맞춰 Giscus 테마를 동기화합니다.
+  function getGiscusTheme() {
+    const htmlTheme = document.querySelector('html').dataset.theme;
+    return htmlTheme === 'dark' ? 'dark' : 'light';
+  }
+
+  function sendGiscusTheme(theme) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme } } },
+      'https://giscus.app'
+    );
+  }
+
+  // 페이지 로드 시 현재 테마 적용
+  window.addEventListener('load', () => {
+    // giscus iframe 로드 대기
+    const observer = new MutationObserver(() => {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      if (iframe) {
+        sendGiscusTheme(getGiscusTheme());
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+
+  // PaperMod 테마 토글 버튼 클릭 감지
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      // PaperMod가 data-theme을 변경한 직후 giscus에 전달
+      setTimeout(() => sendGiscusTheme(getGiscusTheme()), 100);
+    });
+  }
+</script>
 {{- end }}
