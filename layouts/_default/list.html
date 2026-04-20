@@ -2,6 +2,7 @@
 
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
+{{- partial "home_widgets.html" . }}
 {{- else }}
 
 {{- if not .IsHome | and .Title }}
