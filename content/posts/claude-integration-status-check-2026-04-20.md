@@ -3,7 +3,7 @@ title: "Claude 연동 전체 상태 체크 리포트 (2026-04-20)"
 date: 2026-04-20
 draft: false
 tags: ["ai", "notion", "github-actions"]
-categories: ["Claude / AI"]
+categories: ["Claude"]
 description: "Claude Code와 연계된 Notion, GitHub, 스킬 시스템, Notion-GitHub 파이프라인의 전체 동기화 상태를 점검한 시스템 헬스체크 리포트"
 showToc: true
 ---
