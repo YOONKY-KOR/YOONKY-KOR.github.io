@@ -4,39 +4,33 @@
     scroll-behavior: smooth;
   }
 
-  /* ─── 홈 프로필 레이아웃 ──────────────────────────────── */
+  /* ─── 홈 프로필 (기본, 사이드바 외) ─────────────────── */
 
-  /* 프로필 섹션 전체 수직 여백 */
   .main .profile {
     min-height: unset;
     padding: 1.2rem 0 0.5rem;
     justify-content: center;
   }
 
-  /* 프로필 내부 요소 간격 */
   .profile .profile_inner {
     gap: 0.5rem;
   }
 
-  /* 프로필 이미지 크기 */
   .profile img {
     width: 90px !important;
     height: 90px !important;
   }
 
-  /* 프로필 제목 */
   .profile .profile_inner h1 {
     font-size: 1.3rem;
     margin: 0.2rem 0 0;
   }
 
-  /* 프로필 부제목 */
   .profile .profile_inner span {
     font-size: 0.85rem;
     color: var(--secondary);
   }
 
-  /* 소셜 아이콘 세로 여백 */
   .profile .social-icons {
     margin: 0.2rem 0 0;
   }
@@ -44,36 +38,31 @@
   /* ─── 홈 전용: 메인 영역 상단 패딩 축소 ─────────────── */
   body.list .main {
     padding-top: 6px;
+    max-width: 1100px;
   }
 
-  /* ─── 포스트 미리보기 텍스트 폰트만 소폭 축소 ─────── */
+  /* ─── 포스트 미리보기 텍스트 ─────────────────────────── */
   .entry-content {
     font-size: 13px;
   }
 
   /* ─── 홈 2단 그리드 레이아웃 ─────────────────────────── */
-
-  /* 홈페이지에서 main 컨테이너를 넓게 */
-  body.list .main {
-    max-width: 1100px;
-  }
-
   .home-layout {
     display: grid;
     grid-template-columns: 260px 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: start;
   }
 
-  /* 사이드바 고정: 스크롤해도 좌측에 붙어있음 */
+  /* 사이드바 고정 */
   .home-sidebar {
     position: sticky;
     top: 80px;
   }
 
-  /* 사이드바 프로필 중앙 정렬 */
+  /* 사이드바 프로필: 90% 스케일 + 중앙 정렬 */
   .home-sidebar .profile {
-    padding: 0.5rem 0 0.8rem;
+    padding: 0.4rem 0 0.6rem;
     align-items: center;
     justify-content: center;
   }
@@ -81,25 +70,49 @@
   .home-sidebar .profile_inner {
     align-items: center;
     text-align: center;
+    gap: 0.4rem;
   }
 
-  /* 우측 포스트 목록 */
+  .home-sidebar .profile img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .home-sidebar .profile_inner h1 {
+    font-size: 1.15rem;
+    margin: 0.15rem 0 0;
+  }
+
+  .home-sidebar .profile_inner span {
+    font-size: 0.77rem;
+  }
+
+  .home-sidebar .profile .social-icons {
+    margin: 0.1rem 0 0;
+    justify-content: center;
+  }
+
+  /* ─── 우측 포스트 목록: /posts/ 카드 양식 통일 ──────── */
   .home-posts {
     min-width: 0;
   }
 
   .home-posts .post-entry {
-    padding: 1.2rem 0;
-    border-bottom: 1px solid var(--border);
-    opacity: 0.95;
-  }
-
-  .home-posts .post-entry:first-child {
-    padding-top: 0;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+    transition: box-shadow 0.2s;
   }
 
   .home-posts .post-entry:last-of-type {
-    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .home-posts .post-entry:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .home-all-posts {
@@ -107,18 +120,25 @@
     font-size: 0.9rem;
   }
 
-  /* 모바일: 세로 스택 */
+  /* ─── 모바일: 단일 컬럼 ──────────────────────────────── */
   @media (max-width: 768px) {
+    body.list .main {
+      max-width: 750px;
+    }
+
     .home-layout {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
     .home-sidebar {
       position: static;
+      width: 100%;
     }
 
-    body.list .main {
-      max-width: 750px;
+    .home-sidebar .profile img {
+      width: 72px !important;
+      height: 72px !important;
     }
   }
 </style>
