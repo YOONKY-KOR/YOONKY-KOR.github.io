@@ -44,3 +44,11 @@ jobs:
           git add content/
           git diff --cached --quiet || git commit -m "chore: sync posts from Notion [skip ci]"
           git push
+
+      - name: Trigger profile README blog post update
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/YOONKY-KOR/YOONKY-KOR/actions/workflows/blog-post-update.yml/dispatches \
+            -d '{"ref":"main"}'
