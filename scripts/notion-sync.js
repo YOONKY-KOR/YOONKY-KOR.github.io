@@ -14,9 +14,16 @@ const CATEGORY_MAP = {
   "Architecture": "architecture",
   "Azure": "azure",
   "Claude": "ai",
+  "Claude/AI": "ai",
+  "Claude / AI": "ai",
   "Dev Notes": "posts",
   "Japan Life": "posts",
 };
+
+// 카테고리명에서 특수문자 제거 (Hugo taxonomy URL 안전)
+function sanitizeCategory(cat) {
+  return cat.replace(/\s*\/\s*/g, "-").trim();
+}
 
 function getSectionDir(category) {
   return CATEGORY_MAP[category] || "posts";
@@ -68,7 +75,7 @@ async function syncPosts() {
       lines.push(`tags: [${tags.map((t) => `"${t}"`).join(", ")}]`);
     }
     if (category) {
-      lines.push(`categories: ["${category}"]`);
+      lines.push(`categories: ["${sanitizeCategory(category)}"]`);
     }
     if (summary) {
       lines.push(`description: "${escapeQuotes(summary)}"`);
