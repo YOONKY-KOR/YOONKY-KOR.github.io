@@ -15,7 +15,7 @@
     {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
     {{- $pages = $pages.ByDate.Reverse }}
     {{- $paginator := .Paginate $pages }}
-    {{- $homeLimit := 5 }}
+    {{- $homeLimit := 3 }}
 
     {{- range $index, $page := $paginator.Pages }}
     {{- if (ge $index $homeLimit) }}{{- continue }}{{- end }}
