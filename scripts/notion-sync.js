@@ -29,7 +29,7 @@ async function syncPosts() {
     database_id: DATABASE_ID,
     filter: {
       property: "Status",
-      select: { equals: "Published" },
+      status: { equals: "Published" },
     },
   });
 
