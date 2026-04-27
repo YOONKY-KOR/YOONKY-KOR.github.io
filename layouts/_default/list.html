@@ -11,7 +11,7 @@
   </aside>
 
   <div class="home-posts">
-    {{- $allPages := where site.RegularPages "Section" "in" site.Params.mainSections }}
+    {{- $allPages := where site.RegularPages "Section" "in" (slice "posts" "architecture" "ai" "azure") }}
     {{- $allPages = where $allPages "Params.hiddenInHomeList" "!=" "true" }}
     {{- $recent := first 3 ($allPages.ByDate.Reverse) }}
 
