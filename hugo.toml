@@ -132,6 +132,7 @@ enableRobotsTXT = true
   # mainSections: 홈 피드 및 RSS에 포함할 content/ 하위 섹션 목록
   #    → 새 카테고리 폴더를 추가할 경우 여기에도 등록하세요.
   mainSections = ["posts", "azure", "architecture", "ai"]
+  ShowAllPagesInArchive = true
 
 
   # ----------------------------------------------------------
