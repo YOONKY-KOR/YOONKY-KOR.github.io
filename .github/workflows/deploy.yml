@@ -69,3 +69,11 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Trigger profile README blog post update
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/YOONKY-KOR/YOONKY-KOR/actions/workflows/blog-post-update.yml/dispatches \
+            -d '{"ref":"main"}'
