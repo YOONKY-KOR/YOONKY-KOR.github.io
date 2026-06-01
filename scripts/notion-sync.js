@@ -158,4 +158,33 @@ function slugify(text) {
     .trim();
 }
 
-syncPosts().catch(console.error);
+async function syncAboutPage() {
+  const ABOUT_PAGE_ID = "345256d3e0538108b04bfd3e97e649c9";
+  console.log("Fetching About page from Notion...");
+
+  const mdBlocks = await n2m.pageToMarkdown(ABOUT_PAGE_ID);
+  const mdString = n2m.toMarkdownString(mdBlocks);
+
+  const today = new Date().toISOString().split("T")[0];
+  const frontMatter = [
+    `---`,
+    `title: "About"`,
+    `date: ${today}`,
+    `layout: "about"`,
+    `url: "/about/"`,
+    `summary: "about"`,
+    `---`,
+    ``,
+  ].join("\n");
+
+  const filepath = path.join(CONTENT_ROOT, "about.md");
+  fs.writeFileSync(filepath, frontMatter + mdString.parent, "utf-8");
+  console.log("Synced: content/about.md");
+}
+
+async function main() {
+  await syncPosts();
+  await syncAboutPage();
+}
+
+main().catch(console.error);
