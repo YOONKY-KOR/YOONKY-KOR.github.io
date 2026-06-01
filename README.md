@@ -70,11 +70,12 @@ GitHub 저장소 Settings > Secrets and variables > Actions에 다음 시크릿 
 |--------|------|------|
 | Title | Title | 포스트 제목 |
 | Slug | Rich Text | URL 슬러그 (영문) |
-| Date | Date | 발행일 |
 | Status | Select | `Published` 상태인 항목만 동기화 |
 | Tags | Multi-select | 태그 |
-| Categories | Multi-select | 카테고리 (`posts` / `ai` / `architecture` / `azure`) |
-| Description | Rich Text | 포스트 설명 |
+| Category | Select | 카테고리 (`AI` / `Azure` / `Architecture` / `Dev Notes`) |
+| Summary | Rich Text | 포스트 설명 (description) |
+| Series | Rich Text | 연재 시리즈명 |
+| Series Order | Number | 연재 순서 |
 
 ### 수동 실행
 

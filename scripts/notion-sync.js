@@ -13,11 +13,8 @@ const CONTENT_ROOT = path.join(__dirname, "../content");
 const CATEGORY_MAP = {
   "Architecture": "architecture",
   "Azure": "azure",
-  "Claude": "ai",
-  "Claude/AI": "ai",
-  "Claude / AI": "ai",
+  "AI": "ai",
   "Dev Notes": "posts",
-  "Japan Life": "posts",
 };
 
 // 카테고리명에서 특수문자 제거 (Hugo taxonomy URL 안전)
@@ -29,26 +26,49 @@ function getSectionDir(category) {
   return CATEGORY_MAP[category] || "posts";
 }
 
+// Notion DB에서 Published 포스트 전체 조회 (페이지네이션 처리)
+async function fetchAllPublishedPages() {
+  const pages = [];
+  let cursor = undefined;
+
+  do {
+    const response = await notion.databases.query({
+      database_id: DATABASE_ID,
+      filter: {
+        property: "Status",
+        status: { equals: "Published" },
+      },
+      start_cursor: cursor,
+    });
+
+    pages.push(...response.results);
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+
+  return pages;
+}
+
 async function syncPosts() {
   console.log("Fetching posts from Notion...");
 
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: {
-      property: "Status",
-      status: { equals: "Published" },
-    },
-  });
+  const pages = await fetchAllPublishedPages();
+  console.log(`Total published posts: ${pages.length}`);
 
+  // 현재 동기화된 파일 추적 (섹션/슬러그 기준)
   const syncedFiles = new Set();
-  const syncedPageIds = [];
 
-  for (const page of response.results) {
+  for (const page of pages) {
     const props = page.properties;
 
     const title = props.Title?.title?.[0]?.plain_text || "Untitled";
     const slug = props.Slug?.rich_text?.[0]?.plain_text || slugify(title);
-    const date = page.created_time.split("T")[0];
+
+    // Published Date 필드 우선 사용, 없으면 created_time fallback
+    const publishedDate = props["Published Date"]?.date?.start;
+    const date = publishedDate
+      ? publishedDate.split("T")[0]
+      : page.created_time.split("T")[0];
+
     const tags = (props.Tags?.multi_select || []).map((t) => t.name);
     const category = props.Category?.select?.name || "";
     const summary = props.Summary?.rich_text?.[0]?.plain_text || "";
@@ -96,16 +116,33 @@ async function syncPosts() {
 
     fs.writeFileSync(filepath, content, "utf-8");
     console.log(`Synced: ${section}/${filename}`);
-    syncedFiles.add(`${section}/${filename}`);
-    syncedPageIds.push(page.id);
+    syncedFiles.add(path.join(section, filename));
   }
 
-  // commit 후 GitHub Commit 필드 업데이트를 위해 page ID 목록 저장
-  const syncedPath = path.join(__dirname, "synced-pages.json");
-  fs.writeFileSync(syncedPath, JSON.stringify(syncedPageIds, null, 2));
+  // 동기화 대상이 아닌 기존 .md 파일 삭제 (비공개/삭제 처리)
+  cleanupStaleFiles(syncedFiles);
 
   console.log(`Sync complete. ${syncedFiles.size} post(s) written.`);
-  syncedFiles.forEach((f) => console.log(`  ✓ ${f}`));
+}
+
+// Notion에서 내려간 포스트의 .md 파일 삭제
+function cleanupStaleFiles(syncedFiles) {
+  const sections = Object.values(CATEGORY_MAP);
+  const uniqueSections = [...new Set(sections)];
+
+  for (const section of uniqueSections) {
+    const sectionDir = path.join(CONTENT_ROOT, section);
+    if (!fs.existsSync(sectionDir)) continue;
+
+    const files = fs.readdirSync(sectionDir).filter((f) => f.endsWith(".md"));
+    for (const file of files) {
+      const relativePath = path.join(section, file);
+      if (!syncedFiles.has(relativePath)) {
+        fs.unlinkSync(path.join(sectionDir, file));
+        console.log(`Removed stale file: ${relativePath}`);
+      }
+    }
+  }
 }
 
 function escapeQuotes(str) {
@@ -115,7 +152,7 @@ function escapeQuotes(str) {
 function slugify(text) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\uAC00-\uD7A3\s-]/g, "")
+    .replace(/[^a-z0-9가-힣\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .trim();
