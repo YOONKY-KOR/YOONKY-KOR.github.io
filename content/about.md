@@ -24,8 +24,8 @@ Azure 클라우드 엔지니어링과 AI 자동화 시스템을 다루는 기술
 
 | 섹션                                                  | 내용                       | 상태        |
 | --------------------------------------------------- | ------------------------ | --------- |
-| [Blog](https://www.notion.so/posts/)                | 개발 노트 및 학습 기록111         | 운영 중 (1편) |
-| [Azure](https://www.notion.so/azure/)               | Azure 실무 기술 노트111        | 아티클 준비 중  |
+| [Blog](https://www.notion.so/posts/)                | 개발 노트 및 학습 기록            | 운영 중 (1편) |
+| [Azure](https://www.notion.so/azure/)               | Azure 실무 기술 노트           | 아티클 준비 중  |
 | [Architecture](https://www.notion.so/architecture/) | 클라우드 아키텍처 설계 노트 시리즈      | 운영 중 (1편) |
 | [AI](https://www.notion.so/ai/)                     | AI 워크플로우 시스템 구축 및 활용 가이드 | 아티클 준비 중  |
 
@@ -76,5 +76,5 @@ Azure 클라우드 엔지니어링과 AI 자동화 시스템을 다루는 기술
 ## 마지막 업데이트
 
 
-2026-06-02
+2026-06-02(화)
 
