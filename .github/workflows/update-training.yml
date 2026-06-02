@@ -3,8 +3,8 @@ name: Update Training App
 on:
   workflow_dispatch:
     inputs:
-      html_content:
-        description: 'training.html 파일 내용 (base64)'
+      gist_id:
+        description: 'Gist ID (training.html이 있는 Gist)'
         required: true
         type: string
 
@@ -22,9 +22,22 @@ jobs:
         with:
           token: ${{ secrets.TRAINING_DEPLOY_TOKEN }}
 
-      - name: Update training app
+      - name: Download from Gist
         run: |
-          echo "${{ github.event.inputs.html_content }}" | base64 -d > static/training/index.html
+          curl -H "Authorization: token ${{ secrets.TRAINING_DEPLOY_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               "https://api.github.com/gists/${{ github.event.inputs.gist_id }}" \
+               -o gist_response.json
+          python3 -c "
+          import json
+          data = json.load(open('gist_response.json'))
+          files = data.get('files', {})
+          for fname, fdata in files.items():
+              if fname.endswith('.html'):
+                  open('static/training/index.html', 'w').write(fdata['content'])
+                  print(f'저장 완료: {fname}')
+                  break
+          "
 
       - name: Commit and push
         run: |
