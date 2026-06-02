@@ -36,7 +36,7 @@ async function fetchAllPublishedPages() {
       database_id: DATABASE_ID,
       filter: {
         property: "Status",
-        status: { equals: "Published" },
+        select: { equals: "Published" },
       },
       start_cursor: cursor,
     });
