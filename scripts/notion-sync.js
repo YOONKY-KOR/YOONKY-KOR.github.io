@@ -134,7 +134,7 @@ function cleanupStaleFiles(syncedFiles) {
     const sectionDir = path.join(CONTENT_ROOT, section);
     if (!fs.existsSync(sectionDir)) continue;
 
-    const files = fs.readdirSync(sectionDir).filter((f) => f.endsWith(".md"));
+    const files = fs.readdirSync(sectionDir).filter((f) => f.endsWith(".md") && f !== "_index.md");
     for (const file of files) {
       const relativePath = path.join(section, file);
       if (!syncedFiles.has(relativePath)) {
