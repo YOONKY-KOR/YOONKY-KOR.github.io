@@ -1,0 +1,35 @@
+name: Update Training App
+
+on:
+  workflow_dispatch:
+    inputs:
+      html_content:
+        description: 'training.html 파일 내용 (base64)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.TRAINING_DEPLOY_TOKEN }}
+
+      - name: Update training app
+        run: |
+          echo "${{ github.event.inputs.html_content }}" | base64 -d > static/training/index.html
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/training/index.html
+          git diff --cached --quiet || git commit -m "feat: training app 업데이트"
+          git push
