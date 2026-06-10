@@ -428,7 +428,7 @@ function render() {
 
   // Day 탭
   const dayTabs = document.getElementById("day-tabs");
-  dayTabs.innerHTML = ["A","B","C","D"].map(d=>{
+  dayTabs.innerHTML = ["A","C","B","D"].map(d=>{
     const s = BASE_SESSIONS[d];
     const isActive = state.day===d;
     const typeColor = s.type==="수업"?"#9B8FFF":block.color;
