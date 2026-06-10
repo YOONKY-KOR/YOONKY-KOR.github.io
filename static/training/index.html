@@ -283,14 +283,16 @@ const BLOCKS = [
 ];
 
 const BASE_SESSIONS = {
-  C:{label:"Day C",tag:"등 + 어깨",type:"개인",exercises:[
-    {id:"c1",name:"랫풀다운 (바)",sets:4,reps:10,weight:"32kg",note:"광배 스트레치 집중"},
-    {id:"c2",name:"시티드 케이블로우",sets:3,reps:12,weight:"가볍게",note:"어깨 뒤로 당기기"},
-    {id:"c3",name:"체스트 서포티드로우",sets:3,reps:12,weight:"가볍게",note:"허리 부하 없음"},
-    {id:"c4",name:"아놀드프레스",sets:3,reps:10,weight:"10kg",note:"찝힘 즉시 중단"},
-    {id:"c5",name:"레터럴 레이즈",sets:3,reps:15,weight:"3kg",note:"측면 삼각근"},
-    {id:"c6",name:"스트레이트암 풀다운",sets:2,reps:15,weight:"가볍게",note:"마무리 광배"},
-  ]},
+  C:{label:"Day C",tag:"등 + 어깨",type:"개인",weekExercises:{
+    1:[
+      {id:"c1",name:"랫풀다운 (바)",sets:4,reps:10,weight:"32kg",note:"광배 스트레치 집중"},
+      {id:"c2",name:"시티드 케이블로우",sets:3,reps:12,weight:"가볍게",note:"어깨 뒤로 당기기"},
+      {id:"c3",name:"체스트 서포티드로우",sets:3,reps:12,weight:"가볍게",note:"허리 부하 없음"},
+      {id:"c4",name:"아놀드프레스",sets:3,reps:10,weight:"10kg",note:"찝힘 즉시 중단"},
+      {id:"c5",name:"레터럴 레이즈",sets:3,reps:15,weight:"3kg",note:"측면 삼각근"},
+      {id:"c6",name:"스트레이트암 풀다운",sets:2,reps:15,weight:"가볍게",note:"마무리 광배"},
+    ],
+  }},
   D:{label:"Day D",tag:"하체",type:"개인",exercises:[
     {id:"d1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
     {id:"d2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
@@ -472,10 +474,14 @@ function renderSession() {
   const checkSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0A0A0C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
   if(exercises.length === 0) {
+    const isClass = rawSession.type === "수업";
     document.getElementById("exercises").innerHTML = `
       <div style="text-align:center;padding:48px 16px;color:rgba(232,230,224,0.25);font-size:14px;line-height:1.6;">
-        수업 세션<br>
-        <span style="font-size:12px;opacity:0.6">수업 내용 (수업 공유 후 업데이트 예정)</span>
+        ${isClass ? "수업 세션" : "개인 운동"}<br>
+        <span style="font-size:12px;opacity:0.6">${isClass
+          ? "수업 내용 (수업 공유 후 업데이트 예정)"
+          : "수업 입력 후 개인운동이 자동 생성됩니다"
+        }</span>
       </div>`;
     return;
   }
