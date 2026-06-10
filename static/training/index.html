@@ -283,14 +283,8 @@ const BLOCKS = [
 ];
 
 const BASE_SESSIONS = {
-  C:{label:"Day C",tag:"등 + 어깨",type:"개인",weekExercises:{}},
-  D:{label:"Day D",tag:"하체",type:"개인",exercises:[
-    {id:"d1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
-    {id:"d2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
-    {id:"d3",name:"고블릿 스쿼트",sets:4,reps:15,weight:"12kg",note:"가동범위 집중"},
-    {id:"d4",name:"어브덕터",sets:4,reps:20,weight:"40kg",note:"외전근"},
-    {id:"d5",name:"어덕터",sets:4,reps:20,weight:"40kg",note:"내전근"},
-  ]},
+  C:{label:"Day C",tag:"하체",type:"수업",weekExercises:{}},
+  D:{label:"Day D",tag:"등 + 어깨",type:"개인",weekExercises:{}},
   A:{label:"Day A",tag:"가슴 + 등",type:"수업",weekExercises:{
     1:[
       {id:"a1",name:"덤벨 프레스",sets:4,reps:15,weight:"12kg×2",note:"가슴 전체"},
@@ -299,7 +293,7 @@ const BASE_SESSIONS = {
       {id:"a4",name:"원암 로우",sets:4,reps:10,weight:"25kg",note:"각 팔 기준"},
     ],
   }},
-  B:{label:"Day B",tag:"하체",type:"수업",weekExercises:{
+  B:{label:"Day B",tag:"하체",type:"개인",weekExercises:{
     1:[
       {id:"b1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
       {id:"b2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
@@ -428,7 +422,7 @@ function render() {
 
   // Day 탭
   const dayTabs = document.getElementById("day-tabs");
-  const DAY_ORDER = ["A","D","B","C"];
+  const DAY_ORDER = ["A","B","C","D"];
   const DAY_LABELS = ["A","B","C","D"];
   dayTabs.innerHTML = DAY_ORDER.map((d,i)=>{
     const s = BASE_SESSIONS[d];
