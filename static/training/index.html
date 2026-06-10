@@ -298,19 +298,23 @@ const BASE_SESSIONS = {
     {id:"d4",name:"어브덕터",sets:4,reps:20,weight:"40kg",note:"외전근"},
     {id:"d5",name:"어덕터",sets:4,reps:20,weight:"40kg",note:"내전근"},
   ]},
-  A:{label:"Day A",tag:"가슴 + 등",type:"수업",exercises:[
-    {id:"a1",name:"덤벨 프레스",sets:4,reps:15,weight:"12kg×2",note:"가슴 전체"},
-    {id:"a2",name:"인클라인 덤벨 프레스",sets:4,reps:15,weight:"10kg×2",note:"상부 가슴"},
-    {id:"a3",name:"비하인드 랫풀다운",sets:3,reps:12,weight:"25kg",note:"광배 집중"},
-    {id:"a4",name:"원암 로우",sets:4,reps:10,weight:"25kg",note:"각 팔 기준"},
-  ]},
-  B:{label:"Day B",tag:"하체",type:"수업",exercises:[
-    {id:"b1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
-    {id:"b2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
-    {id:"b3",name:"고블릿 스쿼트",sets:4,reps:15,weight:"12kg",note:"가동범위 집중"},
-    {id:"b4",name:"어브덕터",sets:4,reps:20,weight:"40kg",note:"외전근"},
-    {id:"b5",name:"어덕터",sets:4,reps:20,weight:"40kg",note:"내전근"},
-  ]},
+  A:{label:"Day A",tag:"가슴 + 등",type:"수업",weekExercises:{
+    1:[
+      {id:"a1",name:"덤벨 프레스",sets:4,reps:15,weight:"12kg×2",note:"가슴 전체"},
+      {id:"a2",name:"인클라인 덤벨 프레스",sets:4,reps:15,weight:"10kg×2",note:"상부 가슴"},
+      {id:"a3",name:"비하인드 랫풀다운",sets:3,reps:12,weight:"25kg",note:"광배 집중"},
+      {id:"a4",name:"원암 로우",sets:4,reps:10,weight:"25kg",note:"각 팔 기준"},
+    ],
+  }},
+  B:{label:"Day B",tag:"하체",type:"수업",weekExercises:{
+    1:[
+      {id:"b1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
+      {id:"b2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
+      {id:"b3",name:"고블릿 스쿼트",sets:4,reps:15,weight:"12kg",note:"가동범위 집중"},
+      {id:"b4",name:"어브덕터",sets:4,reps:20,weight:"40kg",note:"외전근"},
+      {id:"b5",name:"어덕터",sets:4,reps:20,weight:"40kg",note:"내전근"},
+    ],
+  }},
 };
 
 function scaleExercises(exercises, blockId) {
@@ -451,7 +455,10 @@ function renderSession() {
   const block = BLOCKS.find(b=>b.id===state.block);
   const rgb = hexToRgb(block.color);
   const rawSession = BASE_SESSIONS[state.day];
-  const exercises = scaleExercises(rawSession.exercises, state.block);
+  const baseExercises = rawSession.weekExercises
+    ? (rawSession.weekExercises[state.week] || [])
+    : rawSession.exercises;
+  const exercises = scaleExercises(baseExercises, state.block);
   const doneCount = exercises.filter(e=>isDone(e.id)).length;
   const progress = exercises.length ? doneCount/exercises.length : 0;
 
@@ -463,6 +470,15 @@ function renderSession() {
   document.getElementById("progress-fill").style.background = `linear-gradient(90deg,rgba(${rgb},0.6),${block.color})`;
 
   const checkSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0A0A0C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  if(exercises.length === 0) {
+    document.getElementById("exercises").innerHTML = `
+      <div style="text-align:center;padding:48px 16px;color:rgba(232,230,224,0.25);font-size:14px;line-height:1.6;">
+        수업 내용 적용 예정<br>
+        <span style="font-size:12px;opacity:0.6">${state.week}주차 수업 후 업데이트됩니다</span>
+      </div>`;
+    return;
+  }
 
   document.getElementById("exercises").innerHTML = exercises.map((ex,i)=>{
     const done = isDone(ex.id);
