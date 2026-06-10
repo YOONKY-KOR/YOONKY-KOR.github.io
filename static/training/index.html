@@ -428,12 +428,14 @@ function render() {
 
   // Day 탭
   const dayTabs = document.getElementById("day-tabs");
-  dayTabs.innerHTML = ["A","C","B","D"].map(d=>{
+  const DAY_ORDER = ["A","D","B","C"];
+  const DAY_LABELS = ["A","B","C","D"];
+  dayTabs.innerHTML = DAY_ORDER.map((d,i)=>{
     const s = BASE_SESSIONS[d];
     const isActive = state.day===d;
     const typeColor = s.type==="수업"?"#9B8FFF":block.color;
     return `<button class="day-tab ${isActive?'active':''}" onclick="selectDay('${d}')">
-      <div class="day-tab-label">${s.label}</div>
+      <div class="day-tab-label">Day ${DAY_LABELS[i]}</div>
       <div class="day-tab-type" style="color:${typeColor};opacity:${isActive?1:0.6}">${s.type==="수업"?"수업":"개인"}</div>
     </button>`;
   }).join("");
