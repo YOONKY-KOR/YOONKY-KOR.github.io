@@ -283,24 +283,24 @@ const BLOCKS = [
 ];
 
 const BASE_SESSIONS = {
-  C:{label:"Day C",tag:"하체",type:"수업",weekExercises:{}},
-  D:{label:"Day D",tag:"등 + 어깨",type:"개인",weekExercises:{}},
-  A:{label:"Day A",tag:"가슴 + 등",type:"수업",weekExercises:{
-    1:[
+  C:{label:"Day C",type:"수업",weekExercises:{}},
+  D:{label:"Day D",type:"개인",weekExercises:{}},
+  A:{label:"Day A",type:"수업",weekExercises:{
+    1:{tag:"가슴 + 등",exercises:[
       {id:"a1",name:"덤벨 프레스",sets:4,reps:15,weight:"12kg×2",note:"가슴 전체"},
       {id:"a2",name:"인클라인 덤벨 프레스",sets:4,reps:15,weight:"10kg×2",note:"상부 가슴"},
       {id:"a3",name:"비하인드 랫풀다운",sets:3,reps:12,weight:"25kg",note:"광배 집중"},
       {id:"a4",name:"원암 로우",sets:4,reps:10,weight:"25kg",note:"각 팔 기준"},
-    ],
+    ]},
   }},
-  B:{label:"Day B",tag:"하체",type:"개인",weekExercises:{
-    1:[
+  B:{label:"Day B",type:"개인",weekExercises:{
+    1:{tag:"하체",exercises:[
       {id:"b1",name:"바벨 스쿼트",sets:4,reps:10,weight:"40kg",note:"하체 전체"},
       {id:"b2",name:"싱글레그 익스텐션",sets:4,reps:15,weight:"40kg",note:"각 다리 기준"},
       {id:"b3",name:"고블릿 스쿼트",sets:4,reps:15,weight:"12kg",note:"가동범위 집중"},
       {id:"b4",name:"어브덕터",sets:4,reps:20,weight:"40kg",note:"외전근"},
       {id:"b5",name:"어덕터",sets:4,reps:20,weight:"40kg",note:"내전근"},
-    ],
+    ]},
   }},
 };
 
@@ -318,10 +318,14 @@ function hexToRgb(hex){
 }
 
 // ── 상태
-let state = { block:1, week:1, day:"C" };
 const STORAGE_KEY = "ky_training_v1";
+const STATE_KEY = "ky_training_state_v1";
 function load(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");}catch{return{};} }
 function save(d){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}catch{} }
+function loadState(){ try{return JSON.parse(localStorage.getItem(STATE_KEY)||"{}");}catch{return{};} }
+function saveState(){ try{localStorage.setItem(STATE_KEY,JSON.stringify({block:state.block,week:state.week,day:state.day}));}catch{} }
+const savedState = loadState();
+let state = { block:savedState.block||1, week:savedState.week||1, day:savedState.day||"A" };
 let completed = load();
 
 // ── 타이머
@@ -442,14 +446,14 @@ function renderSession() {
   const block = BLOCKS.find(b=>b.id===state.block);
   const rgb = hexToRgb(block.color);
   const rawSession = BASE_SESSIONS[state.day];
-  const baseExercises = rawSession.weekExercises
-    ? (rawSession.weekExercises[state.week] || [])
-    : rawSession.exercises;
-  const exercises = scaleExercises(baseExercises, state.block);
+  const weekData = rawSession.weekExercises ? rawSession.weekExercises[state.week] : null;
+  const baseExercises = weekData ? (weekData.exercises || weekData) : [];
+  const weekTag = weekData ? (weekData.tag || "") : "";
+  const exercises = scaleExercises(Array.isArray(baseExercises) ? baseExercises : [], state.block);
   const doneCount = exercises.filter(e=>isDone(e.id)).length;
   const progress = exercises.length ? doneCount/exercises.length : 0;
 
-  document.getElementById("session-title").textContent = rawSession.tag;
+  document.getElementById("session-title").textContent = weekTag || (rawSession.type === "수업" ? "수업 세션" : "개인 운동");
   document.getElementById("session-sub").textContent = `${state.week}주차 · ${block.label} · ${block.sub}`;
   document.getElementById("count-num").textContent = `${doneCount}/${exercises.length}`;
   document.getElementById("count-num").style.color = block.color;
@@ -504,9 +508,9 @@ function renderSession() {
 }
 
 function toggleEx(id){ toggleDone(id); }
-function selectBlock(id){ state.block=id; state.week=BLOCKS.find(b=>b.id===id).weeks[0]; render(); }
-function selectWeek(w){ state.week=w; render(); }
-function selectDay(d){ state.day=d; render(); }
+function selectBlock(id){ state.block=id; state.week=BLOCKS.find(b=>b.id===id).weeks[0]; saveState(); render(); }
+function selectWeek(w){ state.week=w; saveState(); render(); }
+function selectDay(d){ state.day=d; saveState(); render(); }
 
 function initApp(){ render(); }
 
