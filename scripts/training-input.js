@@ -6,9 +6,9 @@ const { execSync } = require("child_process");
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 // Notion DB IDs (from collection URLs)
-const GYM_CALENDAR_ID    = "2e2256d3-e053-81e7-9f5b-000bdf008452";
-const WORKOUT_LOG_ID     = "2e2256d3-e053-81c2-8ac8-000ba7d6bee8";
-const EXERCISE_LIB_ID   = "2e2256d3-e053-8130-94e5-000b2e7efe79";
+const GYM_CALENDAR_ID    = "2e2256d3-e053-8161-81bf-d8031968e692";
+const WORKOUT_LOG_ID     = "2e2256d3-e053-818d-af90-c33bd4c2f5b3";
+const EXERCISE_LIB_ID   = "2e2256d3-e053-8140-9c1a-c46871a37362";
 
 const INDEX_HTML = path.join(__dirname, "../static/training/index.html");
 
