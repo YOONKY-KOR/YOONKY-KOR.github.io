@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<title>트레이닝 입력</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #0F6E56;
+    --bg: #f5f5f5;
+    --bg-card: #fff;
+    --text: #1a1a1a;
+    --text-sub: #666;
+    --border: rgba(0,0,0,0.1);
+  }
+  html, body { height: 100%; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; }
+
+  /* Lock */
+  #lock { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; }
+  #lock .icon { font-size: 40px; }
+  #lock input { width: 220px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); font-size: 16px; text-align: center; outline: none; background: var(--bg-card); }
+  #lock input:focus { border-color: var(--green); }
+  #lock input.err { border-color: #e24b4a; animation: shake .3s; }
+  #lock button { width: 220px; padding: 12px; border-radius: 12px; background: var(--green); color: #fff; font-size: 16px; font-weight: 500; border: none; cursor: pointer; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* App */
+  #app { display: none; flex-direction: column; width: 100%; max-width: 480px; height: 100vh; }
+  #app.show { display: flex; }
+
+  /* Header */
+  .header { padding: 14px 16px 12px; background: var(--bg-card); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .header-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .header-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .header-sub { font-size: 12px; color: var(--text-sub); }
+  .back-link { margin-left: auto; font-size: 12px; color: var(--green); text-decoration: none; flex-shrink: 0; }
+
+  /* Chat */
+  #chat { flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 10px; }
+  .msg-row { display: flex; gap: 8px; }
+  .msg-row.user { flex-direction: row-reverse; }
+  .bot-av { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; align-self: flex-end; }
+  .bubble { padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.55; max-width: 75%; }
+  .bubble.bot { background: var(--bg-card); border: 0.5px solid var(--border); color: var(--text); border-radius: 4px 18px 18px 18px; }
+  .bubble.user { background: var(--green); color: #fff; border-radius: 18px 18px 4px 18px; }
+  .hint-row { font-size: 11px; color: var(--text-sub); padding-left: 36px; margin-top: -4px; }
+
+  /* Buttons */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 36px; }
+  .cbtn { padding: 7px 14px; border-radius: 16px; font-size: 13px; font-weight: 500; border: 1px solid var(--green); color: var(--green-dark); background: var(--bg-card); cursor: pointer; transition: background .15s; -webkit-tap-highlight-color: transparent; }
+  .cbtn:active { background: var(--green-light); }
+  .cbtn.on { background: var(--green); color: #fff; pointer-events: none; }
+  .cbtn.off { opacity: 0.3; pointer-events: none; }
+
+  /* Confirm card */
+  .confirm-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 4px 18px 18px 18px; padding: 14px; max-width: 85%; }
+  .confirm-card h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .cf-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); padding: 4px 0; border-bottom: 0.5px solid var(--border); }
+  .cf-row:last-of-type { border-bottom: none; }
+  .cf-row b { color: var(--text); font-weight: 500; }
+  .ex-section { margin-top: 8px; }
+  .ex-section p { font-size: 11px; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; }
+  .ex-item { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 0.5px solid var(--border); gap: 8px; }
+  .ex-item:last-child { border-bottom: none; }
+  .ex-name { color: var(--text); flex: 1; }
+  .ex-detail { color: var(--text-sub); white-space: nowrap; }
+  .ex-note { font-size: 11px; color: var(--green-dark); }
+  .action-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .abtn { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+  .abtn.ok { background: var(--green); color: #fff; }
+  .abtn.cancel { background: #f0f0f0; color: var(--text-sub); }
+
+  /* Input area */
+  #input-area { padding: 10px 12px; background: var(--bg-card); border-top: 0.5px solid var(--border); display: none; gap: 8px; flex-shrink: 0; }
+  #input-area.show { display: flex; }
+  #txt { flex: 1; border: 1px solid var(--border); border-radius: 22px; padding: 10px 16px; font-size: 14px; color: var(--text); background: var(--bg); outline: none; -webkit-appearance: none; }
+  #txt:focus { border-color: var(--green); }
+  #send { width: 40px; height: 40px; border-radius: 50%; background: var(--green); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  #send svg { width: 18px; height: 18px; }
+
+  /* Loading */
+  .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--green-light); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Status */
+  .status-ok { color: var(--green); }
+  .status-err { color: #e24b4a; }
+</style>
+</head>
+<body>
+
+<!-- Lock Screen -->
+<div id="lock">
+  <div class="icon">🏋️</div>
+  <div style="font-size:17px;font-weight:600;color:#1a1a1a">트레이닝 입력</div>
+  <input type="password" id="pw" placeholder="비밀번호" autocomplete="off"/>
+  <button onclick="checkPw()">확인</button>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div class="header">
+    <div class="header-icon">🏋️</div>
+    <div>
+      <div class="header-title">트레이닝 입력</div>
+      <div class="header-sub" id="header-sub">수업 기록 저장</div>
+    </div>
+    <a href="/training/" class="back-link">← 앱으로</a>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="input-area">
+    <input id="txt" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+    <button id="send" onclick="sendTxt()" aria-label="전송">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const PW_HASH = "c564111fa77efc6f9211971fab1f86221d07c8120714b746ba09f370e79d5731";
+
+async function sha256(s) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+async function checkPw() {
+  const val = document.getElementById("pw").value;
+  const hash = await sha256(val);
+  if (hash === PW_HASH) {
+    sessionStorage.setItem("ky_auth","1");
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("app").classList.add("show");
+    startBot();
+  } else {
+    const inp = document.getElementById("pw");
+    inp.classList.add("err"); inp.value = ""; inp.placeholder = "틀렸습니다";
+    setTimeout(() => { inp.classList.remove("err"); inp.placeholder = "비밀번호"; }, 1000);
+  }
+}
+
+document.getElementById("pw").addEventListener("keydown", e => { if (e.key==="Enter") checkPw(); });
+
+if (sessionStorage.getItem("ky_auth") === "1") {
+  document.getElementById("lock").style.display = "none";
+  document.getElementById("app").classList.add("show");
+  window.addEventListener("DOMContentLoaded", startBot);
+}
+
+// ── 채팅 유틸
+const chat = document.getElementById("chat");
+const iarea = document.getElementById("input-area");
+const txt = document.getElementById("txt");
+
+function addBot(html) {
+  const r = document.createElement("div");
+  r.className = "msg-row";
+  r.innerHTML = `<div class="bot-av">🤖</div><div class="bubble bot">${html}</div>`;
+  chat.appendChild(r); scroll(); return r;
+}
+
+function addUser(text) {
+  const r = document.createElement("div");
+  r.className = "msg-row user";
+  r.innerHTML = `<div class="bubble user">${text}</div>`;
+  chat.appendChild(r); scroll();
+}
+
+function addHint(text) {
+  const d = document.createElement("div");
+  d.className = "hint-row"; d.textContent = text;
+  chat.appendChild(d); scroll();
+}
+
+function addButtons(items, cb) {
+  const w = document.createElement("div");
+  w.className = "btn-row";
+  items.forEach(item => {
+    const b = document.createElement("button");
+    b.className = "cbtn"; b.textContent = item;
+    b.onclick = () => {
+      w.querySelectorAll(".cbtn").forEach(x => x.classList.add(x===b?"on":"off"));
+      cb(item);
+    };
+    w.appendChild(b);
+  });
+  chat.appendChild(w); scroll(); return w;
+}
+
+function showInput(ph) {
+  iarea.classList.add("show");
+  txt.placeholder = ph;
+  setTimeout(() => txt.focus(), 150);
+}
+
+function hideInput() { iarea.classList.remove("show"); txt.value = ""; }
+function scroll() { chat.scrollTop = chat.scrollHeight; }
+
+// ── 상태
+let S = { step: null, week: null, day: null, date: null, intensity: null, exercises: [] };
+
+// ── 운동 파싱
+function parseEx(raw) {
+  const note = (raw.match(/\(([^)]+)\)/) || [])[1] || "";
+  let s = raw.replace(/\([^)]*\)/g, "").trim();
+  const wm = s.match(/(\d+(?:\.\d+)?\s*kg(?:\s*[×x×]\s*\d+)?)/i);
+  const weight = wm ? wm[0].replace(/\s/g,"") : null;
+  if (weight) s = s.replace(wm[0], "").trim();
+  const srm = s.match(/(\d+)\s*[×x×]\s*(\d+)/);
+  let sets = null, reps = null;
+  if (srm) { sets = parseInt(srm[1]); reps = parseInt(srm[2]); s = s.replace(srm[0],"").trim(); }
+  const rm = s.match(/(\d+)\s*회/);
+  if (rm && !sets) { reps = parseInt(rm[1]); s = s.replace(rm[0],"").trim(); }
+  return { name: s.replace(/\s+/g," ").trim(), sets, reps, weight, note };
+}
+
+function exDetail(ex) {
+  const parts = [];
+  if (ex.sets && ex.reps) parts.push(`${ex.sets}세트 × ${ex.reps}회`);
+  else if (ex.reps) parts.push(`${ex.reps}회`);
+  if (ex.weight) parts.push(ex.weight);
+  return parts.join(" / ") || "-";
+}
+
+// ── 대화 흐름
+function startBot() {
+  setTimeout(() => {
+    addBot("안녕하세요! 몇 주차 수업인가요?");
+    addButtons(["1주차","2주차","3주차","4주차"], v => {
+      S.week = parseInt(v); addUser(v);
+      setTimeout(askDay, 300);
+    });
+  }, 200);
+}
+
+function askDay() {
+  addBot("어느 Day인가요?");
+  addButtons(["Day A","Day B","Day C","Day D"], v => {
+    S.day = v.replace("Day ",""); addUser(v);
+    setTimeout(askDate, 300);
+  });
+}
+
+function askDate() {
+  const today = new Date().toLocaleDateString("ko-KR",{month:"long",day:"numeric",weekday:"short"});
+  addBot("날짜를 선택해주세요.");
+  addButtons([`오늘 (${today})`, "직접 입력"], v => {
+    if (v.startsWith("오늘")) {
+      S.date = new Date().toISOString().slice(0,10);
+      addUser("오늘"); setTimeout(askIntensity, 300);
+    } else {
+      addUser("직접 입력");
+      S.step = "date";
+      showInput("예: 2026-06-12");
+    }
+  });
+}
+
+function askIntensity() {
+  addBot("운동 강도는 어떠셨나요?");
+  addButtons(["Low","Moderate","High"], v => {
+    S.intensity = v; addUser(v);
+    setTimeout(askEx, 300);
+  });
+}
+
+function askEx() {
+  S.step = "ex";
+  addBot("운동을 입력해주세요.");
+  addHint("예: 벤치프레스 4×8 60kg · 런닝 · 시티드로우 20회 50kg");
+  addHint("괄호로 메모 가능: T바로우(꽈아악 쪼으기) 15회");
+  showInput("운동명 세트×반복 kg...");
+  addDoneBtn();
+}
+
+function addDoneBtn() {
+  document.getElementById("done-wrap") && document.getElementById("done-wrap").remove();
+  const w = document.createElement("div");
+  w.className = "btn-row"; w.id = "done-wrap";
+  const b = document.createElement("button");
+  b.className = "cbtn"; b.textContent = "✓ 입력 완료";
+  b.onclick = () => {
+    if (S.exercises.length === 0) { addBot("운동을 최소 1개 이상 입력해주세요."); return; }
+    b.classList.add("on");
+    w.querySelectorAll(".cbtn").forEach(x => { if(x!==b) x.classList.add("off"); });
+    hideInput(); addUser("완료");
+    setTimeout(showConfirm, 300);
+  };
+  w.appendChild(b);
+  chat.appendChild(w); scroll();
+}
+
+function sendTxt() {
+  const v = txt.value.trim(); if (!v) return;
+
+  if (S.step === "date") {
+    S.date = v; addUser(v); hideInput(); S.step = null;
+    setTimeout(askIntensity, 300); return;
+  }
+
+  if (S.step === "pat") {
+    const token = v.trim();
+    addUser("••••••••••••••");
+    hideInput(); S.step = null;
+    localStorage.setItem("ky_gh_pat", token);
+    addBot("토큰 저장됐어요. 다음부터는 자동으로 사용돼요.");
+    setTimeout(() => triggerWorkflow(token), 500);
+    return;
+  }
+
+  if (S.step === "ex") {
+    const ex = parseEx(v);
+    if (!ex.name) return;
+    S.exercises.push(ex);
+    addUser(v);
+    const detail = exDetail(ex);
+    const noteHtml = ex.note ? `<br><span style="font-size:11px;color:var(--green-dark)">(${ex.note})</span>` : "";
+    addBot(`<b>${ex.name}</b> — ${detail}${noteHtml}<br><span style="font-size:12px;color:var(--text-sub)">추가됐어요. 더 입력하거나 완료를 눌러주세요.</span>`);
+    txt.value = ""; addDoneBtn(); txt.focus();
+  }
+}
+
+txt.addEventListener("keydown", e => { if (e.key==="Enter") sendTxt(); });
+
+// ── 확인 카드
+function showConfirm() {
+  const exRows = S.exercises.map(ex => {
+    const noteHtml = ex.note ? `<span class="ex-note">(${ex.note})</span>` : "";
+    return `<div class="ex-item"><span class="ex-name">${ex.name} ${noteHtml}</span><span class="ex-detail">${exDetail(ex)}</span></div>`;
+  }).join("");
+
+  const dayLabel = `Day ${S.day} (${["A","C"].includes(S.day) ? "수업" : "개인"})`;
+
+  const wrap = document.createElement("div");
+  wrap.className = "msg-row";
+  wrap.innerHTML = `
+    <div class="bot-av">🤖</div>
+    <div class="confirm-card">
+      <h3>저장 내용 확인</h3>
+      <div class="cf-row"><span>주차</span><b>${S.week}주차</b></div>
+      <div class="cf-row"><span>Day</span><b>${dayLabel}</b></div>
+      <div class="cf-row"><span>날짜</span><b>${S.date}</b></div>
+      <div class="cf-row"><span>강도</span><b>${S.intensity}</b></div>
+      <div class="ex-section">
+        <p>운동 목록 (${S.exercises.length}개)</p>
+        ${exRows}
+      </div>
+      <div class="action-btns">
+        <button class="abtn ok" id="save-btn" onclick="doSave()">Notion + 앱 저장</button>
+        <button class="abtn cancel" onclick="doCancel()">취소</button>
+      </div>
+    </div>`;
+  chat.appendChild(wrap); scroll();
+}
+
+// ── 저장 실행
+async function doSave() {
+  document.getElementById("save-btn").disabled = true;
+  document.getElementById("save-btn").textContent = "저장 중...";
+  addUser("저장");
+
+  const saved = localStorage.getItem("ky_gh_pat");
+  if (!saved) {
+    askForPat();
+    return;
+  }
+  await triggerWorkflow(saved);
+}
+
+function askForPat() {
+  addBot("GitHub PAT가 필요해요.<br><span style='font-size:12px;color:var(--text-sub)'>workflow 권한만 있는 토큰을 한 번만 입력하면 이후엔 자동으로 사용돼요.</span>");
+  S.step = "pat";
+  showInput("ghp_xxxx... 붙여넣기");
+}
+
+async function triggerWorkflow(token) {
+  const payload = JSON.stringify({
+    week: S.week, day: S.day, date: S.date,
+    intensity: S.intensity, exercises: S.exercises
+  });
+
+  const loadingRow = addBot('<span class="loading"></span> GitHub Actions 트리거 중...');
+
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/YOONKY-KOR/hugo/actions/workflows/training-input.yml/dispatches",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `token ${token}`,
+          "Accept": "application/vnd.github+json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ref: "main", inputs: { data: payload } })
+      }
+    );
+
+    if (res.status === 204) {
+      loadingRow.querySelector(".bubble").innerHTML =
+        '<span class="status-ok">✓ 완료!</span> Notion 저장 + 트레이닝 앱 배포가 시작됐어요.<br><span style="font-size:12px;color:var(--text-sub)">약 1~2분 후 앱에 반영돼요.</span>';
+    } else {
+      const err = await res.json().catch(()=>({}));
+      loadingRow.querySelector(".bubble").innerHTML =
+        `<span class="status-err">오류 (${res.status}): ${err.message||"알 수 없는 오류"}</span><br><span style="font-size:12px;color:var(--text-sub)">토큰을 삭제하고 다시 시도해요.</span>`;
+      localStorage.removeItem("ky_gh_pat");
+    }
+  } catch(e) {
+    loadingRow.querySelector(".bubble").innerHTML = `<span class="status-err">네트워크 오류: ${e.message}</span>`;
+  }
+}
+
+function doCancel() {
+  addUser("취소");
+  addBot("취소했어요. 다시 시작하려면 새로고침해주세요.");
+}
+</script>
+</body>
+</html>

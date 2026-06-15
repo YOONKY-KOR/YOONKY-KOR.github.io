@@ -1,0 +1,40 @@
+name: Training Input
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        description: 'Workout JSON data'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install
+
+      - name: Run training input script
+        run: node scripts/training-input.js
+        env:
+          WORKOUT_DATA: ${{ inputs.data }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GIT_USER_NAME: github-actions[bot]
+          GIT_USER_EMAIL: github-actions[bot]@users.noreply.github.com
