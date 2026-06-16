@@ -8,7 +8,7 @@ const notion = new Client({ auth: process.env.NOTION_TOKEN });
 // Notion DB IDs (from collection URLs)
 const GYM_CALENDAR_ID    = "2e2256d3-e053-8161-81bf-d8031968e692";
 const WORKOUT_LOG_ID     = "2e2256d3-e053-818d-af90-c33bd4c2f5b3";
-const EXERCISE_LIB_ID   = "2e2256d3-e053-8130-94e5-000b2e7efe79";
+const EXERCISE_LIB_ID   = "2e2256d3-e053-8119-ba4f-e1cb2857f6e4"; // Archive > Exercise Library standalone DB
 
 const INDEX_HTML = path.join(__dirname, "../static/training/index.html");
 
