@@ -1,6 +1,6 @@
 ---
 title: "About"
-date: 2026-06-17
+date: 2026-06-18
 layout: "about"
 url: "/about/"
 summary: "about"
